@@ -78,3 +78,19 @@ cp $SRC/u-root/pkg/boot/syslinux/testdata/fuzz/*.dict $SRC/u-root/pkg/boot/sysli
 find $SRC/u-root/pkg/boot/syslinux/testdata -name "isolinux.cfg" -exec zip $OUT/fuzz_parse_syslinux_config_seed_corpus.zip {} +
 
 compile_native_go_fuzzer $SRC/u-root/pkg/boot/syslinux FuzzParseSyslinuxConfig fuzz_parse_syslinux_config
+
+#bzimage pkg
+cd $SRC/u-root/pkg/boot/bzimage
+go mod init bzimage
+go mod tidy
+go install github.com/AdamKorcz/go-118-fuzz-build@latest
+go get github.com/AdamKorcz/go-118-fuzz-build/testingtypes
+go get github.com/AdamKorcz/go-118-fuzz-build/utils
+
+cp $SRC/u-root/pkg/boot/bzimage/testdata/fuzz/*.dict $SRC/u-root/pkg/boot/bzimage/testdata/fuzz/*.options $OUT
+
+
+#FuzzParseBzImage
+find $SRC/u-root/pkg/boot/bzimage/testdata -name "bzImage*" -exec zip $OUT/fuzz_parse_bzimage_seed_corpus.zip {} +
+
+compile_native_go_fuzzer $SRC/u-root/pkg/boot/bzimage FuzzParseBzImage fuzz_parse_bzimage
