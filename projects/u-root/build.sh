@@ -78,3 +78,17 @@ cp $SRC/u-root/pkg/boot/syslinux/testdata/fuzz/*.dict $SRC/u-root/pkg/boot/sysli
 find $SRC/u-root/pkg/boot/syslinux/testdata -name "isolinux.cfg" -exec zip $OUT/fuzz_parse_syslinux_config_seed_corpus.zip {} +
 
 compile_native_go_fuzzer $SRC/u-root/pkg/boot/syslinux FuzzParseSyslinuxConfig fuzz_parse_syslinux_config
+
+# gosh pkg  
+cd $SRC/u-root/cmds/exp/gosh
+go mod init gosh
+go mod tidy
+go install github.com/AdamKorcz/go-118-fuzz-build@latest
+go get github.com/AdamKorcz/go-118-fuzz-build/testingtypes
+go get github.com/AdamKorcz/go-118-fuzz-build/utils
+
+cp $SRC/u-root/cmds/exp/gosh/testdata/fuzz/*.dict $SRC/u-root/cmds/exp/gosh/testdata/fuzz/*.options $OUT
+
+## FuzzRun
+find $SRC/u-root/cmds/exp/gosh -name "*.seed" -exec zip $OUT/fuzz_gosh_run_seed_corpus.zip {} +
+compile_native_go_fuzzer $SRC/u-root/cmds/exp/gosh FuzzRun fuzz_gosh_run
